@@ -20,15 +20,23 @@ class Game {
 
   getInput(input) {
     var input_1 = [];
+    var isNumber = true; //inputは基本的には数字
     for (var j = 0; j < 4; j++) {
-      var num = Number(input[j]);
-      input_1[j] = num;
+      if (isNaN(input[j])) {
+        isNumber = false; //inputが数字出ないときを判定
+      } else {
+        var num = Number(input[j]);
+        input_1.push(num);
+      }
     }
-    console.log(input_1);
-    this.conpareToAnswer(input_1);
-    this.record();
-    if (this.log[this.log.length - 1].Hit === 4) {
-      this.correct();
+    if (isNumber) {
+      this.conpareToAnswer(input_1);
+      this.record();
+      if (this.log[this.log.length - 1].Hit === 4) {
+        this.correct();
+      }
+    } else {
+      document.getElementById("result").innerHTML += "不当な答えです</br>";
     }
   }
   conpareToAnswer(input_1) {
