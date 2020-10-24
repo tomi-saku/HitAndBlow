@@ -2,11 +2,13 @@ class Game {
   constructor() {
     this.answer = [];
     this.log = [];
-    this.generateAnswer();
+    this.digits = 4;
+    this.generateAnswer(this.digits);
   }
-  generateAnswer() {
+  generateAnswer(digits) {
+    this.digits = digits;
     this.answer = [];
-    while (this.answer.length < 4) {
+    while (this.answer.length < this.digits) {
       var random = Math.random();
       var number = Math.floor(random * 10);
       if (this.answer.includes(number) === false) {
@@ -20,19 +22,24 @@ class Game {
 
   getInput(input) {
     var input_1 = [];
-    var isNumber = true; //inputは基本的には数字
-    for (var j = 0; j < 4; j++) {
-      if (isNaN(input[j])) {
-        isNumber = false; //inputが数字出ないときを判定
+    var num = 0;
+    var isSuitable = true;
+    for (var j = 0; j < this.digits; j++) {
+      if (
+        isNaN(Number(input[j])) === true ||
+        input_1.includes(Number(input[j])) === true ||
+        input.length !== this.digits
+      ) {
+        isSuitable = false;
       } else {
-        var num = Number(input[j]);
+        num = Number(input[j]);
         input_1.push(num);
       }
     }
-    if (isNumber) {
+    if (isSuitable) {
       this.conpareToAnswer(input_1);
       this.record();
-      if (this.log[this.log.length - 1].Hit === 4) {
+      if (this.log[this.log.length - 1].Hit === this.digits) {
         this.correct();
       }
     } else {
@@ -42,26 +49,23 @@ class Game {
   conpareToAnswer(input_1) {
     var Hit = 0;
     var Blow = 0;
-    for (var k = 0; k < 4; k++) {
+    for (var k = 0; k < this.digits; k++) {
       if (this.answer[k] === input_1[k]) {
         Hit = Hit + 1;
       } else if (this.answer.includes(input_1[k])) {
         Blow = Blow + 1;
       }
     }
-    console.log(Hit);
-    console.log(Blow);
     var data = { Hit: Hit, Blow: Blow, input: input_1 };
     this.log.push(data);
     console.log(this.log[0]);
   }
   record() {
     var round = this.log.length - 1;
-    var input_N =
-      String(this.log[round].input[0]) +
-      String(this.log[round].input[1]) +
-      String(this.log[round].input[2]) +
-      String(this.log[round].input[3]);
+    var input_N = "";
+    for (var l = 0; l < this.digits; l++) {
+      input_N = input_N + String(this.log[round].input[l]);
+    }
     document.getElementById("result").innerHTML +=
       "#" +
       this.log.length +
@@ -74,15 +78,18 @@ class Game {
       "</br>";
   }
   correct() {
-    document.getElementById("result").innerHTML += "Correct answer";
+    document.getElementById("result").innerHTML += "Correct answer</br>";
   }
   error() {}
 }
 var game = new Game();
+
 window.input = function input() {
   var input = document.getElementById("input_1").value;
   game.getInput(input);
 };
 window.reset = function reset() {
-  game.generateAnswer();
+  var digits = Number(document.getElementById("digits_1").value);
+  console.log(digits);
+  game.generateAnswer(digits);
 };
