@@ -8,6 +8,8 @@ class Game {
   generateAnswer(digits) {
     this.digits = digits;
     this.answer = [];
+    document.getElementById("digits").innerHTML =
+      "現在の桁数は" + this.digits + "桁です";
     while (this.answer.length < this.digits) {
       var random = Math.random();
       var number = Math.floor(random * 10);
